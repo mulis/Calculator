@@ -1,30 +1,19 @@
 package console;
 
 import calculator.Calculator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.MathContext;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Client {
 
-    static private Logger logger;
     static private Calculator calculator;
 
     public static void main(String[] args) {
 
-        logger = LoggerFactory.getLogger(Client.class.getName());
-
-        logger.debug("Client start");
-        logger.debug("Arguments: " + Arrays.toString(args));
-
         try {
 
             if (args.length > 0) {
-
-                logger.debug("Client calculate to console");
 
                 calculator = new Calculator();
 
@@ -55,17 +44,14 @@ public class Client {
                     console(expression, verbose);
                 }
 
-                logger.debug("Client stop");
-
             } else {
 
-                logger.debug("Client start gui");
                 new desktop.Client();
 
             }
 
         } catch (Exception ex) {
-            logger.error(ex.toString());
+            System.err.println(ex);
         }
 
     }
@@ -77,9 +63,8 @@ public class Client {
     }
 
     private static void help() {
-        logger.debug("Print help");
         String name = Client.class.getName();
-        logger.info(
+        System.out.println(
                 "Calculation program.\n" +
                         "Usage: " + name + " [[-c] [-p:number] [-v] \"expression\" | [-c] [-p:number] [-v] [-i] | -h]\n" +
                         "\t" + name + " : start gui\n" +
@@ -98,8 +83,7 @@ public class Client {
     }
 
     private static void interactive(boolean verbose) {
-        logger.debug("Enter interactive mode");
-        logger.info(
+        System.out.println(
                 "Interactive mode.\n" +
                         "Input expression and press enter key.\n" +
                         "To exit input dot symbol and press enter key\n"
@@ -110,11 +94,10 @@ public class Client {
             if (in.hasNextLine()) {
                 expression = in.nextLine().replaceFirst("\\n$", "");
                 if (expression.equals(".")) {
-                    logger.debug("Exit interactive mode");
                     break;
                 }
                 if (expression.equals("")) {
-                    logger.error("Expression not found");
+                    System.err.println("Expression not found");
                 } else {
                     outputCalculation(expression, verbose);
                 }
@@ -124,7 +107,7 @@ public class Client {
 
     private static void console(String expression, boolean verbose) {
         if (expression == null) {
-            logger.error("Expression not found");
+            System.err.println("Expression not found");
         } else {
             outputCalculation(expression, verbose);
         }
@@ -132,18 +115,16 @@ public class Client {
 
     private static void outputCalculation(String expression, boolean verbose) {
         try {
-            logger.debug("Calculate expression: " + expression);
             String result = calculator.calculate(expression).toString();
             if (verbose) {
-                logger.info(calculator.getProcessBuffer().toString());
+                System.out.println(calculator.getProcessBuffer().toString());
             }
-            logger.info("=\n" + result);
-            logger.debug("Calculation result: " + result);
+            System.out.println("=\n" + result);
         } catch (Exception ex) {
             if (verbose) {
-                logger.info(calculator.getProcessBuffer().toString());
+                System.out.println(calculator.getProcessBuffer().toString());
             }
-            logger.error(ex.toString());
+            System.err.println(ex.toString());
         }
     }
 

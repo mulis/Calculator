@@ -2,21 +2,20 @@ package desktop;
 
 import calculator.Calculator;
 import calculator.exception.CalculationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class Client extends JFrame {
-
-    static private Logger logger;
 
     static private Calculator calculator;
 
@@ -32,15 +31,12 @@ public class Client extends JFrame {
     public Client() {
 
         super("Calculator");
-        logger = LoggerFactory.getLogger(Client.class.getName());
         calculator = new Calculator();
         initGUI();
 
     }
 
     private void initGUI() {
-
-        logger.debug("Desktop client start");
 
         add(BorderLayout.PAGE_START, makeTextField());
         add(BorderLayout.CENTER, new JScrollPane(makeTextArea()));
@@ -55,12 +51,6 @@ public class Client extends JFrame {
         add(BorderLayout.PAGE_END, panel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                logger.debug("Desktop client stop");
-            }
-        });
         setMinimumSize(new Dimension(800, 600));
         pack();
         setVisible(true);
@@ -75,7 +65,6 @@ public class Client extends JFrame {
                 String expression = textField.getText();
                 textArea.append(expression + newline);
                 try {
-                    logger.debug("Calculate expression: " + expression);
                     String result = calculator.calculate(expression).toString();
                     if (buttonVerbose.isSelected()) {
                         textArea.append(calculator.getProcessBuffer().toString() + newline);
@@ -83,9 +72,7 @@ public class Client extends JFrame {
                     } else {
                         textArea.append("=" + newline + result + newline);
                     }
-                    logger.debug("Calculation result: " + result);
                 } catch (Exception ex) {
-                    logger.error(ex.toString());
                     if (CalculationException.class.isInstance(ex)) {
                         int position = ((CalculationException) ex).token.getStart();
                         textField.setCaretPosition(position);
@@ -125,7 +112,6 @@ public class Client extends JFrame {
         buttonClear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.debug("Calculator output clear");
                 textArea.setText("");
                 textField.grabFocus();
             }
@@ -139,7 +125,6 @@ public class Client extends JFrame {
         buttonVerbose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.debug("Calculator verbose set to " + buttonVerbose.isSelected());
                 textField.grabFocus();
             }
         });
@@ -152,7 +137,6 @@ public class Client extends JFrame {
         spinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                logger.debug("Calculator precision set to " + spinner.getValue());
                 setCalculatorMathContext();
                 textField.grabFocus();
             }
@@ -166,7 +150,6 @@ public class Client extends JFrame {
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.debug("Calculator roundingMode set to " + comboBox.getSelectedItem());
                 setCalculatorMathContext();
                 textField.grabFocus();
             }

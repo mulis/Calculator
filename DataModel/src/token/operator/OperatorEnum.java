@@ -26,27 +26,6 @@ public enum OperatorEnum implements IComputable {
         public BigDecimal compute(BigDecimal[] values, MathContext mathContext) {
             return values[0].subtract(values[1], mathContext);
         }
-    }),
-
-    MULTIPLICATION('*', 3, AssociativityType.LEFT_TO_RIGHT, 2, new Computer() {
-        @Override
-        public BigDecimal compute(BigDecimal[] values, MathContext mathContext) {
-            return values[0].multiply(values[1], mathContext);
-        }
-    }),
-
-    DIVISION('/', 3, AssociativityType.LEFT_TO_RIGHT, 2, new Computer() {
-        @Override
-        public BigDecimal compute(BigDecimal[] values, MathContext mathContext) {
-            return values[0].divide(values[1], mathContext);
-        }
-    }),
-
-    EXPONENTIATION('^', 3, AssociativityType.LEFT_TO_RIGHT, 2, new Computer() {
-        @Override
-        public BigDecimal compute(BigDecimal[] values, MathContext mathContext) {
-            return new BigDecimal(Math.pow(values[0].doubleValue(), values[1].doubleValue()), mathContext);
-        }
     });
 
     public final char sign;

@@ -3,7 +3,6 @@ package calculator;
 import calculator.exception.*;
 import token.IToken;
 import token.TokenType;
-import token.function.IFunctionToken;
 import token.number.INumberToken;
 import token.operator.AssociativityType;
 import token.operator.IOperatorToken;
@@ -11,11 +10,9 @@ import token.operator.IOperatorToken;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class Calculator implements ICalculator {
 
-    private Logger logger = Logger.getLogger(Calculator.class.getName());
     private MathContext mathContext = MathContext.DECIMAL64;
     private StringBuffer operationalBuffer = new StringBuffer();
 
@@ -35,8 +32,6 @@ public class Calculator implements ICalculator {
         ArrayList<IToken> tokens;
 
         try {
-
-            logger.info("Expression:\n\t" + expression);
 
             operationalBuffer.setLength(0);
             operationalBuffer.append("Process calculation:");
@@ -91,48 +86,6 @@ public class Calculator implements ICalculator {
 
                 }
 
-                if (token.getType() == TokenType.FUNCTION) {
-
-                    IFunctionToken function = (IFunctionToken) token;
-                    INumberToken[] arguments = new INumberToken[function.getArgumentCount()];
-
-                    if (!function.isArgumentCountInRange()) throw (new WrongArgumentsNumberException(function));
-
-                    index -= function.getArgumentCount();
-                    if (index < 0) {
-                        throw (new AbsentArgumentException(function));
-                    }
-
-                    for (int i = 0; i < function.getArgumentCount(); i++) {
-
-                        IToken argument = tokens.get(index);
-
-                        if (argument.getType() == TokenType.NUMBER) {
-
-                            arguments[i] = (INumberToken) argument;
-                            tokens.remove(argument);
-
-                        } else {
-                            throw (new AbsentArgumentException(function));
-                        }
-
-                    }
-
-                    INumberToken result;
-
-                    try {
-                        result = function.compute(arguments, mathContext);
-                    } catch (Exception ex) {
-                        throw (new CalculationException(ex.getMessage(), function));
-                    }
-
-                    tokens.add(index, result);
-                    tokens.remove(function);
-
-                    operationalBuffer.append(dumpTokens(tokens));
-
-                }
-
                 index++;
 
                 if ((index == tokens.size()) && (tokens.size() > 1)) {
@@ -141,17 +94,11 @@ public class Calculator implements ICalculator {
 
             }
 
-            logger.fine(operationalBuffer.toString());
-
         } catch (CalculationException ex) {
-            logger.fine(operationalBuffer.toString());
-            logger.severe(ex.toString());
             throw (ex);
         }
 
         BigDecimal result = ((INumberToken) tokens.get(0)).getValue().add(BigDecimal.ZERO, mathContext);
-
-        logger.info("Result:\n\t" + result.toString());
 
         return result;
 
@@ -197,54 +144,10 @@ public class Calculator implements ICalculator {
             }
 
             // If the token is a function token, then push it onto the stack.
-            else if (token.getType() == TokenType.FUNCTION) {
-                tokenStack.add(token);
-                continue;
-            }
+            // TODO
 
             // If the token is a function argument separator (e.g., a comma):
-            else if (token.getType() == TokenType.FUNCTION_ARGUMENT_SEPARATOR) {
-
-                // increase argument count of first function token on stack
-                for (int i = tokenStack.size() - 1; i > -1; --i) {
-
-                    IToken tokenStackItem = tokenStack.get(i);
-
-                    if (tokenStackItem.getType() == TokenType.FUNCTION) {
-
-                        IFunctionToken function = (IFunctionToken) tokenStackItem;
-                        function.setArgumentCount(function.getArgumentCount() + 1);
-                        break;
-
-                    }
-
-                }
-
-                boolean parenthesesMatch = false;
-
-                while (tokenStack.size() > 0) {
-
-                    IToken tokenStackItem = tokenStack.get(tokenStack.size() - 1);
-
-                    if (tokenStackItem.getType() == TokenType.PARENTHESIS_LEFT) {
-                        parenthesesMatch = true;
-                        break;
-                    } else {
-                        // Until the token at the top of the stack is a left parenthesis,
-                        // pop operators off the stack onto the output queue.
-                        tokenStack.remove(tokenStackItem);
-                        tokens.add(tokenStackItem);
-                    }
-
-                }
-
-                // If no left parentheses are encountered, either the separator was misplaced
-                // or parentheses were mismatched.
-                if (!parenthesesMatch) {
-                    throw (new ParenthesesNotMatchException(token));
-                }
-
-            }
+            // TODO
 
             // If the token is an operator, op1, then:
             else if (token.getType() == TokenType.OPERATOR) {
@@ -311,18 +214,6 @@ public class Calculator implements ICalculator {
 
                 // Pop the left parenthesis from the stack, but not onto the output queue.
                 tokenStack.remove(tokenStack.size() - 1);
-
-                // If the token at the top of the stack is a function token, pop it onto the output queue.
-                if (tokenStack.size() > 0) {
-
-                    IToken tokenStackItem = tokenStack.get(tokenStack.size() - 1);
-
-                    if (tokenStackItem.getType() == TokenType.FUNCTION) {
-                        tokenStack.remove(tokenStackItem);
-                        tokens.add(tokenStackItem);
-                    }
-
-                }
 
                 continue;
 
