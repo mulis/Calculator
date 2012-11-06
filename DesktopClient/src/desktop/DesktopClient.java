@@ -2,6 +2,7 @@ package desktop;
 
 import calculator.Calculator;
 import calculator.exception.CalculationException;
+import console.ConsoleClient;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -15,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-public class Client extends JFrame {
+public class DesktopClient extends JFrame {
 
     static private Calculator calculator;
 
@@ -28,7 +29,7 @@ public class Client extends JFrame {
 
     static private final String newline = System.getProperty("line.separator");
 
-    public Client() {
+    public DesktopClient() {
 
         super("Calculator");
         calculator = new Calculator();
@@ -159,6 +160,30 @@ public class Client extends JFrame {
 
     private void setCalculatorMathContext() {
         calculator.setMathContext(new MathContext((Integer) spinner.getValue(), (RoundingMode) comboBox.getSelectedItem()));
+    }
+
+    public static void main(String[] args) {
+
+        if (args.length > 0) {
+
+            boolean console = false;
+
+            for (String arg : args) {
+                if (arg.equalsIgnoreCase("-c")) console = true;
+            }
+
+            if (console) {
+
+                ConsoleClient.main(args);
+
+            }
+
+        } else {
+
+            new DesktopClient();
+
+        }
+
     }
 
 }

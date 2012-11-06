@@ -8,6 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Service" />
+    <orderEntry type="module" module-name="ConsoleClient" />
     <orderEntry type="module" module-name="DataModel" />
   </component>
 </module>

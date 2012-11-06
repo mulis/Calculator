@@ -8,8 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Service" />
-    <orderEntry type="module" module-name="DataModel" />
-    <orderEntry type="module" module-name="DesktopClient" />
   </component>
 </module>
 

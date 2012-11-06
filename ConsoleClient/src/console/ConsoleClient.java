@@ -5,7 +5,7 @@ import calculator.Calculator;
 import java.math.MathContext;
 import java.util.Scanner;
 
-public class Client {
+public class ConsoleClient {
 
     static private Calculator calculator;
 
@@ -46,7 +46,7 @@ public class Client {
 
             } else {
 
-                new desktop.Client();
+                help();
 
             }
 
@@ -63,7 +63,7 @@ public class Client {
     }
 
     private static void help() {
-        String name = Client.class.getName();
+        String name = ConsoleClient.class.getName();
         System.out.println(
                 "Calculation program.\n" +
                         "Usage: " + name + " [[-c] [-p:number] [-v] \"expression\" | [-c] [-p:number] [-v] [-i] | -h]\n" +
@@ -109,6 +109,7 @@ public class Client {
         if (expression == null) {
             System.err.println("Expression not found");
         } else {
+            System.out.println(expression);
             outputCalculation(expression, verbose);
         }
     }
