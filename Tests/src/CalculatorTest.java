@@ -64,7 +64,7 @@ public class CalculatorTest {
         testCalculation(" 5 / 3 ", new BigDecimal("1.666666666666667"));
     }
 
-    //@Test
+    @Test
     public void testFunctions() {
         testCalculation(" sqr( 2 * 2 * 4) ", new BigDecimal(4));
         testCalculation(" min( 2 + 2 , 5) ", new BigDecimal(4));

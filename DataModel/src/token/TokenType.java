@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public enum TokenType {
 
     SIGNED_NUMBER("\\G\\([\\+\\-]\\d+\\)"),
-    NUMBER("\\G\\d+"),
+    NUMBER("\\G\\d*\\.?\\d+"),
     PARENTHESIS_LEFT("\\G\\("),
     PARENTHESIS_RIGHT("\\G\\)"),
     OPERATOR(OperatorEnum.getPattern()),
