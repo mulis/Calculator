@@ -1,5 +1,6 @@
 package token;
 
+import token.function.FunctionToken;
 import token.number.NumberToken;
 import token.operator.OperatorToken;
 
@@ -17,6 +18,14 @@ public class TokenFactory {
 
         if (type == TokenType.OPERATOR) {
             return new OperatorToken(expression, start, end);
+        }
+
+        if (type == TokenType.FUNCTION) {
+            return new FunctionToken(expression, start, end);
+        }
+
+        if (type == TokenType.FUNCTION_ARGUMENT_SEPARATOR) {
+            return new Token(TokenType.FUNCTION_ARGUMENT_SEPARATOR, expression, start, end);
         }
 
         if (type == TokenType.PARENTHESIS_LEFT) {
